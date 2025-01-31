@@ -60,7 +60,7 @@ namespace TeVasAMorir
                 jugador.FichaJugador.xPosicion = jugador.xInicial;
                 jugador.FichaJugador.yPosicion = jugador.yInicial;
                 jugador.FichaJugador.DibujarFicha();
-                MostrarInformacion(juego);
+                //MostrarInformacion(juego);
                 this.Desactivar();
             }
         }
@@ -81,7 +81,7 @@ namespace TeVasAMorir
                 if (jugador.FichaJugador.Velocidad > 1)
                 {
                     jugador.FichaJugador.Velocidad--;
-                    MostrarInformacion(juego);
+                    //MostrarInformacion(juego);
                 }
                 this.Desactivar();
             }
@@ -103,7 +103,7 @@ namespace TeVasAMorir
                 if (jugador.FichaJugador.TiempoEnfriamiento < 10)
                 {
                     jugador.FichaJugador.TiempoEnfriamiento++;
-                    MostrarInformacion(juego);
+                    // MostrarInformacion(juego);
                 }
                 this.Desactivar();
             }

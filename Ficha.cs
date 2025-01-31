@@ -102,7 +102,7 @@ namespace TeVasAMorir
                     }
 
                     // Mostrar información adicional fuera del laberinto
-                    MostrarInformacion(laberinto, juego);
+                    //MostrarInformacion(laberinto, juego);
                     //elimine el metodo de mostrar infromacion
 
                 }
@@ -124,7 +124,7 @@ namespace TeVasAMorir
                             xActual--;
                             break;
                     }
-                    MostrarInformacion(laberinto, juego);
+                    // MostrarInformacion(laberinto, juego);
                 }
 
 
@@ -138,7 +138,8 @@ namespace TeVasAMorir
             Console.Write("  ");
         }
 
-        public void MostrarInformacion(Laberinto laberinto, Juego juego)
+        public void
+        MostrarInformacion(Laberinto laberinto, Juego juego)
         {
             // Calcular la línea de información de manera segura
             int lineaInfo = laberinto.Tablero.GetLength(1) + 1;
