@@ -10,7 +10,7 @@ namespace TeVasAMorir
         private static readonly int[] dy = { 1, -1, 0, 0 };
         //List<Trampa> TrampasActivas ;
 
-        public Laberinto(int tamano)
+        public Laberinto(int tamano, Juego juego)
         {
             this.tamano = tamano;
             Tablero = new Celda[tamano, tamano];
@@ -19,9 +19,31 @@ namespace TeVasAMorir
             GenerarLaberinto();
             CrearLaberinto();
             PonerMetas();
+            PonerTrampas(juego);
 
         }
 
+        void PonerTrampas(Juego juego)
+        {
+
+            Random random = new Random();
+            for (int x = 0; x < tamano; x++)
+            {
+                for (int y = 0; y < tamano; y++)
+                {
+                    if (Tablero[x, y].EsObstaculo == false)
+                    {
+                        int numRamdom = random.Next(1, 100);
+                        if (numRamdom <= 10)
+                        {
+                            int trampaIndex = random.Next(juego.TrampasDisponibles.Count); // Selecciona un índice de trampa aleatorio
+                            Tablero[x, y].TieneTrampa = true;
+                            Tablero[x, y].TrampaDeCelda = juego.TrampasDisponibles[trampaIndex];
+                        }
+                    }
+                }
+            }
+        }
 
         private void PonerMetas()
         {
@@ -31,13 +53,16 @@ namespace TeVasAMorir
         }
 
         //esto es para imprimir las metas de nuevo cuando un jugador las borre al pasar
-        public void ImprimirMetas()
+        public void ReImprimirMetas()
         {
 
             Console.SetCursorPosition(tamano, 0);
-            Console.Write("۝۝");
+            Console.Write("MI");
             Console.SetCursorPosition(tamano, tamano - 1);
-            Console.Write("۝۝");
+            Console.Write("MI");
+            Console.SetCursorPosition(tamano, (tamano - 1) / 2);
+            Console.Write("▒▒");
+
 
 
         }
@@ -295,6 +320,7 @@ namespace TeVasAMorir
                 }
                 Console.WriteLine();
             }
+            Console.CursorVisible = false;
         }
     }
 

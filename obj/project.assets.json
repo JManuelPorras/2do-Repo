@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\socor\\Desktop\\Aqui\\JuegoFino\\JuegoFino.csproj",
+      "projectUniqueName": "C:\\Users\\socor\\Desktop\\Aqui\\2do-Repo\\JuegoFino.csproj",
       "projectName": "JuegoFino",
-      "projectPath": "C:\\Users\\socor\\Desktop\\Aqui\\JuegoFino\\JuegoFino.csproj",
+      "projectPath": "C:\\Users\\socor\\Desktop\\Aqui\\2do-Repo\\JuegoFino.csproj",
       "packagesPath": "C:\\Users\\socor\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\socor\\Desktop\\Aqui\\JuegoFino\\obj\\",
+      "outputPath": "C:\\Users\\socor\\Desktop\\Aqui\\2do-Repo\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\socor\\AppData\\Roaming\\NuGet\\NuGet.Config"

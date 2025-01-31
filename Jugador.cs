@@ -34,6 +34,7 @@ namespace TeVasAMorir
             while (true)
             {
                 string entrada = Console.ReadLine()!;
+                Console.CursorVisible = false;
                 if (int.TryParse(entrada, out indice) && indice >= 0 && indice < FichasDisponibles.Count)
                 {
                     break;
@@ -44,18 +45,23 @@ namespace TeVasAMorir
                 }
             }
 
-            return FichasDisponibles[indice];
+            Ficha fichaOriginal = FichasDisponibles[indice];
+            Ficha fichaClonada = fichaOriginal.Clone();
+
+            return fichaClonada;
         }
 
         string EstablecerNombre()
         {
             Console.WriteLine("Por favor, introduzca el nombre de un jugador.");
             string nombre = Console.ReadLine()!;
+            Console.CursorVisible = false;
 
             while (string.IsNullOrEmpty(nombre))
             {
                 Console.WriteLine("El nombre no puede ser vacío. Por favor, introduzca un nombre válido.");
                 nombre = Console.ReadLine()!;
+                Console.CursorVisible = false;
             }
 
             return nombre;

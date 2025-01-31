@@ -1,15 +1,15 @@
 namespace TeVasAMorir
 {
-    class Juego
+    public class Juego
     {
-        Laberinto laberinto { get; set; } = null!;
-        List<Ficha> fichasDisponibles { get; set; }
-        List<Jugador> JugadoresActivos { get; set; }
-        List<Trampa> TrampasDisponibles { get; set; }
+        public Laberinto laberinto { get; set; } = null!;
+        public List<Ficha> fichasDisponibles { get; set; }
+        public List<Jugador> JugadoresActivos { get; set; }
+        public List<Trampa> TrampasDisponibles { get; set; }
         bool JuegoTerminado = false;
         int cantJug { get; set; }
         string Dificultad { get; set; }
-        Jugador jugadorActual = null!;
+        public Jugador jugadorActual = null!;
 
         public Juego()
         {
@@ -39,12 +39,13 @@ namespace TeVasAMorir
         }
         void ManejarTurnos()
         {
-            int turno = 1;
+            Console.CursorVisible = false;
+            int turno = 0;
 
             while (!JuegoTerminado)
             {
                 jugadorActual = JugadoresActivos[turno % JugadoresActivos.Count];
-                jugadorActual.FichaJugador.MoverFicha(laberinto);
+                jugadorActual.FichaJugador.MoverFicha(laberinto, this);
 
                 if (jugadorActual.FichaJugador.Puntuacion >= 2 &&
                     jugadorActual.FichaJugador.xPosicion == laberinto.tamano / 2 &&
@@ -55,31 +56,43 @@ namespace TeVasAMorir
                     JuegoTerminado = true;
                 }
 
-                turno++;
+                turno += 1;
             }
         }
 
-        void PonerFichasIniciales()
+        public void PonerFichasIniciales()
         {
-            for (int i = 0; i < JugadoresActivos.Count; i++)
+            foreach (var jugador in JugadoresActivos)
             {
-                JugadoresActivos[i].FichaJugador.DibujarFicha(JugadoresActivos[i].xInicial, JugadoresActivos[i].yInicial);
+                if (jugador.FichaJugador.xPosicion >= 0 && jugador.FichaJugador.xPosicion < laberinto.tamano &&
+                    jugador.FichaJugador.yPosicion >= 0 && jugador.FichaJugador.yPosicion < laberinto.tamano)
+                {
+                    jugador.FichaJugador.DibujarFicha(jugador.FichaJugador.xPosicion, jugador.FichaJugador.yPosicion);
+                }
+                else
+                {
+                    Console.WriteLine($"Posición inicial inválida para {jugador.Nombre}: ({jugador.FichaJugador.xPosicion}, {jugador.FichaJugador.yPosicion})");
+                }
             }
         }
-
         List<Jugador> CrearJugadores(int cantJug, Laberinto laberinto, List<Ficha> fichasDisponibles)
         {
             List<Jugador> jugadores = new List<Jugador>();
 
-            for (int i = 1; i <= cantJug; i++)
+            int xPos = 0;
+            int yPos = 0;
+
+            for (int i = 0; i < cantJug; i++)
             {
-                int xPos = 0;
-                int yPos = 0;
 
                 switch (i)
                 {
-                    case 1:
+                    case 0:
                         xPos = 0;
+                        yPos = 0;
+                        break;
+                    case 1:
+                        xPos = laberinto.tamano - 1;
                         yPos = 0;
                         break;
                     case 2:
@@ -87,10 +100,6 @@ namespace TeVasAMorir
                         yPos = laberinto.tamano - 1;
                         break;
                     case 3:
-                        xPos = laberinto.tamano - 1;
-                        yPos = 0;
-                        break;
-                    case 4:
                         xPos = laberinto.tamano - 1;
                         yPos = laberinto.tamano - 1;
                         break;
@@ -105,11 +114,11 @@ namespace TeVasAMorir
 
         List<Ficha> CrearFichas(Laberinto laberinto)
         {
-            FichaMillonario Milloneta = new FichaMillonario(laberinto);
-            FichaElColero Colero = new FichaElColero(laberinto);
-            FichaElJodedor Jodedor = new FichaElJodedor(laberinto);
-            FichaElSocio Socio = new FichaElSocio(laberinto);
-            FichaElTuSabe TuSabe = new FichaElTuSabe(laberinto);
+            FichaMillonario Milloneta = new FichaMillonario(laberinto, this);
+            FichaElColero Colero = new FichaElColero(laberinto, this);
+            FichaElJodedor Jodedor = new FichaElJodedor(laberinto, this);
+            FichaElSocio Socio = new FichaElSocio(laberinto, this);
+            FichaElTuSabe TuSabe = new FichaElTuSabe(laberinto, this);
             List<Ficha> fichasDisponibles = new List<Ficha> { Milloneta, Colero, Jodedor, Socio, TuSabe, };
             return fichasDisponibles;
         }
@@ -118,19 +127,29 @@ namespace TeVasAMorir
         Laberinto MakeLaberinto(string Dificultad)
         {
             Laberinto laberinto;
+            int tamanoLaberinto;
 
             switch (Dificultad.ToLower())
             {
                 case "facil":
-                    laberinto = new Laberinto(31);
+
+                    tamanoLaberinto = 31;//tamano del laberinto en dificultad facil 
+
+
+
+                    laberinto = new Laberinto(tamanoLaberinto, this);
                     break;
 
                 case "media":
-                    laberinto = new Laberinto(41);
+                    tamanoLaberinto = 41;//tamano del laberinto en dificultad media
+
+                    laberinto = new Laberinto(tamanoLaberinto, this);
                     break;
 
                 case "dificil":
-                    laberinto = new Laberinto(51);
+                    tamanoLaberinto = 51;//tamano del laberinto en dificultad dificil
+
+                    laberinto = new Laberinto(tamanoLaberinto, this);
                     break;
 
                 default:
@@ -150,6 +169,7 @@ namespace TeVasAMorir
             {
                 Console.WriteLine("Por favor introduzca el número de jugadores de 1 a 4");
                 string entrada = Console.ReadLine()!;
+                Console.CursorVisible = false;
 
                 if (string.IsNullOrEmpty(entrada))
                 {
@@ -185,6 +205,7 @@ namespace TeVasAMorir
             {
                 Console.WriteLine("Por favor introduzca la dificultad (facil, media, dificil):");
                 dificultad = Console.ReadLine()!;
+                Console.CursorVisible = false;
 
                 if (string.IsNullOrEmpty(dificultad))
                 {

@@ -10,6 +10,8 @@ namespace TeVasAMorir
         public bool TieneFicha { get; set; }
         public bool EsMetaFinal { get; set; }
         public bool EsMetaIntermedia { get; set; }
+        public bool TieneTrampa = false;
+        public Trampa TrampaDeCelda = null!;
 
         public Celda(int x, int y)
         {
@@ -35,7 +37,11 @@ namespace TeVasAMorir
             }
             else if (EsMetaIntermedia)
             {
-                Console.Write("۝۝");
+                Console.Write("MI");
+            }
+            else if (TieneTrampa)
+            {
+                Console.Write("T ");
             }
             else
             {

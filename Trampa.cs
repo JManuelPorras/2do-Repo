@@ -24,8 +24,21 @@ namespace TeVasAMorir
             Activa = false;
         }
 
-        public virtual void AfectarFicha(Jugador jugador)
+        public virtual void AfectarFicha(Jugador jugador, Juego juego)
         {
+
+        }
+
+        public void MostrarInformacion(Juego juego)
+        {
+            Console.SetCursorPosition(0, juego.laberinto.Tablero.GetLength(1) + 4);
+            Console.WriteLine($"{Descripcion}");
+            Console.WriteLine("Presione enter para continuar");
+            Console.ReadLine();
+            Console.SetCursorPosition(0, juego.laberinto.Tablero.GetLength(1) + 4);
+            Console.Write(new string(' ', Console.WindowWidth));
+            Console.SetCursorPosition(0, juego.laberinto.Tablero.GetLength(1) + 5);
+            Console.Write(new string(' ', Console.WindowWidth));
 
         }
     }
@@ -38,13 +51,17 @@ namespace TeVasAMorir
             Descripcion = "Error en la acreditacion de los papeles, regresas al principio";
         }
 
-        public override void AfectarFicha(Jugador jugador)
+        public override void AfectarFicha(Jugador jugador, Juego juego)
         {
             if (Activa)
             {
+                //esto lo pone en una esquina de nuevo
+                jugador.FichaJugador.BorrarFicha();
                 jugador.FichaJugador.xPosicion = jugador.xInicial;
                 jugador.FichaJugador.yPosicion = jugador.yInicial;
-                Activa = false;
+                jugador.FichaJugador.DibujarFicha();
+                MostrarInformacion(juego);
+                this.Desactivar();
             }
         }
     }
@@ -57,11 +74,16 @@ namespace TeVasAMorir
             Descripcion = "Tienes q meterte una buena cola, tu velocidad disminuye en uno";
         }
 
-        public override void AfectarFicha(Jugador jugador)
+        public override void AfectarFicha(Jugador jugador, Juego juego)
         {
-            if (jugador.FichaJugador.Velocidad > 1)
+            if (Activa)
             {
-                jugador.FichaJugador.Velocidad--;
+                if (jugador.FichaJugador.Velocidad > 1)
+                {
+                    jugador.FichaJugador.Velocidad--;
+                    MostrarInformacion(juego);
+                }
+                this.Desactivar();
             }
         }
     }
@@ -71,14 +93,19 @@ namespace TeVasAMorir
         public SinCorriente()
         {
 
-            Descripcion = "Tienes q meterte una buena cola, tu velocidad disminuye en uno";
+            Descripcion = "Se fue la corriente, el tiempo de enfriamiento de tu habilidad aumenta en 1";
         }
 
-        public override void AfectarFicha(Jugador jugador)
+        public override void AfectarFicha(Jugador jugador, Juego juego)
         {
-            if (jugador.FichaJugador.TiempoEnfriamiento < 10)
+            if (Activa)
             {
-                jugador.FichaJugador.TiempoEnfriamiento++;
+                if (jugador.FichaJugador.TiempoEnfriamiento < 10)
+                {
+                    jugador.FichaJugador.TiempoEnfriamiento++;
+                    MostrarInformacion(juego);
+                }
+                this.Desactivar();
             }
         }
     }
