@@ -56,12 +56,13 @@ namespace TeVasAMorir
             if (Activa)
             {
                 //esto lo pone en una esquina de nuevo
-                jugador.FichaJugador.BorrarFicha();
+                juego.laberinto.Tablero[jugador.FichaJugador.xPosicion, jugador.FichaJugador.yPosicion].TieneFicha = false;
                 jugador.FichaJugador.xPosicion = jugador.xInicial;
                 jugador.FichaJugador.yPosicion = jugador.yInicial;
-                jugador.FichaJugador.DibujarFicha();
+                juego.laberinto.Tablero[jugador.FichaJugador.xPosicion, jugador.FichaJugador.yPosicion].TieneFicha = true;
                 //MostrarInformacion(juego);
                 this.Desactivar();
+                juego.laberinto.ImprimirTablero();
             }
         }
     }

@@ -72,17 +72,11 @@ namespace TeVasAMorir
                 else
                 if (MovValido(laberinto, xActual, yActual))
                 {
-                    //borrar la posicion anterior del jugador
-                    BorrarFicha();
-
                     // Actualizar la posición del jugador
                     laberinto.Tablero[xPosicion, yPosicion].TieneFicha = false;
                     xPosicion = xActual;
                     yPosicion = yActual;
                     laberinto.Tablero[xPosicion, yPosicion].TieneFicha = true;
-
-                    // Dibujar la nueva posición del jugador
-                    DibujarFicha();
 
 
                     //si la nueva celda tiene trampa lo afecta
@@ -97,9 +91,9 @@ namespace TeVasAMorir
                     if (xPosicion == laberinto.tamano / 2 && (yPosicion == 0 || yPosicion == laberinto.tamano - 1 || yPosicion == (laberinto.tamano - 1) / 2))
                     {
                         Puntuacion++;
-                        //imprime las metas de nuevo cuando el jugador las borra
-                        laberinto.ReImprimirMetas();
+
                     }
+                    laberinto.ImprimirTablero();
 
                     // Mostrar información adicional fuera del laberinto
                     //MostrarInformacion(laberinto, juego);
@@ -134,7 +128,7 @@ namespace TeVasAMorir
         public void BorrarFicha()
         {
             // Borrar la posición anterior del jugador
-            Console.SetCursorPosition(xPosicion * 2, yPosicion);
+            Console.SetCursorPosition(xPosicion, yPosicion);
             Console.Write("  ");
         }
 
@@ -164,17 +158,15 @@ namespace TeVasAMorir
 
         public void DibujarFicha()
         {
-
             //*2 pq las casillas tienen mas largo que ancho en consola
-            Console.SetCursorPosition(xPosicion * 2, yPosicion);
+            Console.SetCursorPosition(xPosicion, yPosicion);
             Console.Write("P ");
         }
 
         public void DibujarFicha(int x, int y)
         {
-
             //*2 pq las casillas tienen mas largo que ancho en consola
-            Console.SetCursorPosition(x * 2, y);
+            Console.SetCursorPosition(x, y);
             Console.Write("P ");
         }
 
@@ -265,9 +257,6 @@ namespace TeVasAMorir
                 else
                 if (MovValido(laberinto, xActual, yActual))
                 {
-                    //borrar la posicion anterior del jugador
-                    BorrarFicha();
-
 
                     // Actualizar la posición del jugador
                     laberinto.Tablero[xPosicion, yPosicion].TieneFicha = false;
@@ -275,8 +264,6 @@ namespace TeVasAMorir
                     yPosicion = yActual;
                     laberinto.Tablero[xPosicion, yPosicion].TieneFicha = true;
 
-                    // Dibujar la nueva posición del jugador
-                    DibujarFicha();
                     paso++;
 
                     //Sumarle un punto si llego a una meta intermedia
@@ -284,7 +271,7 @@ namespace TeVasAMorir
                     {
                         Puntuacion++;
                     }
-
+                    laberinto.ImprimirTablero();
 
 
                 }
@@ -341,24 +328,28 @@ namespace TeVasAMorir
         //mientras la casilla de la izquierda no tenga obstaculo se teletransporta
         public override void UsarHabilidad(Laberinto laberinto)
         {
-            BorrarFicha();
+
             if (yPosicion == 0)
             {
                 return;
             }
             else
             {
+                laberinto.Tablero[xPosicion, yPosicion].TieneFicha = false;
                 while (laberinto.Tablero[xPosicion, yPosicion - 1].EsObstaculo == false)
                 {
                     yPosicion -= 1;
                     if (yPosicion == 0)
                     {
+                        laberinto.Tablero[xPosicion, yPosicion].TieneFicha = true;
+                        laberinto.ImprimirTablero();
                         return;
                     }
                 }
+                laberinto.Tablero[xPosicion, yPosicion].TieneFicha = true;
 
             }
-            DibujarFicha();
+            laberinto.ImprimirTablero();
         }
     }
 
@@ -437,24 +428,28 @@ namespace TeVasAMorir
         //mientras la casilla de la derecha no tenga obstaculo se teletransporta
         public override void UsarHabilidad(Laberinto laberinto)
         {
-            BorrarFicha();
             if (yPosicion == laberinto.tamano - 1)
             {
                 return;
             }
             else
             {
+                laberinto.Tablero[xPosicion, yPosicion].TieneFicha = false;
+
                 while (laberinto.Tablero[xPosicion, yPosicion + 1].EsObstaculo == false)
                 {
                     yPosicion += 1;
                     if (yPosicion == laberinto.tamano - 1)
                     {
+                        laberinto.Tablero[xPosicion, yPosicion].TieneFicha = true;
+                        laberinto.ImprimirTablero();
                         return;
                     }
                 }
 
             }
-            DibujarFicha();
+            laberinto.Tablero[xPosicion, yPosicion].TieneFicha = true;
+            laberinto.ImprimirTablero();
         }
 
     }

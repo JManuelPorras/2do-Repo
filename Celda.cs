@@ -31,17 +31,21 @@ namespace TeVasAMorir
             {
                 Console.Write("■ ");
             }
-            else if (EsMetaFinal)
+            else if (EsMetaFinal && TieneFicha == false)
             {
                 Console.Write("▒▒");
             }
-            else if (EsMetaIntermedia)
+            else if (EsMetaIntermedia && TieneFicha == false)
             {
                 Console.Write("MI");
             }
-            else if (TieneTrampa)
+            else if (TieneTrampa && TieneFicha == false)
             {
                 Console.Write("T ");
+            }
+            else if (TieneFicha)
+            {
+                Console.Write("P ");
             }
             else
             {

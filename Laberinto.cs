@@ -26,7 +26,7 @@ namespace TeVasAMorir
         void PonerTrampas(Juego juego)
         {
 
-            Random random = new Random();
+            Random random = new();
             for (int x = 0; x < tamano; x++)
             {
                 for (int y = 0; y < tamano; y++)
@@ -91,6 +91,7 @@ namespace TeVasAMorir
             }
         }
 
+        //Aqui nadie tiene obstaculo y nadie ha sido visitada
         private void CrearLaberinto()
         {
 
@@ -169,9 +170,12 @@ namespace TeVasAMorir
 
         }
 
+        //Va poniendo obstaculos mientras las metas sean accesibles desde las esquinas
+        // o sea, crea los caminos.
+        //los caminos se quedan marcados como visitados y todo lo demas es un obstaculo
         private void ColocarObstaculos()
         {
-            // Inicializamos todas las celdas no como visitadas y sin obstáculo
+            // Inicializamos todas las celdas como no visitadas y sin obstáculo
             for (int y = 0; y < tamano; y++)
             {
                 for (int x = 0; x < tamano; x++)
@@ -181,6 +185,8 @@ namespace TeVasAMorir
                 }
             }
 
+
+            //Creo una lista con las metas
             var objetivo = new List<(int, int)>
         {
             (tamano / 2, tamano / 2),
@@ -188,6 +194,14 @@ namespace TeVasAMorir
             (tamano / 2, tamano - 1)
         };
 
+            foreach (var meta in objetivo)
+            {
+                Tablero[meta.Item1, meta.Item2].EsObstaculo = false;
+                Tablero[meta.Item1, meta.Item2].Visitada = true;
+
+            }
+
+            //Creo una lista con las salidas
             var esquinas = new List<(int, int)>
         {
             (0, 0),
@@ -195,6 +209,13 @@ namespace TeVasAMorir
             (tamano - 1, 0),
             (tamano - 1, tamano - 1)
         };
+
+            foreach (var salida in esquinas)
+            {
+                Tablero[salida.Item1, salida.Item2].EsObstaculo = false;
+                Tablero[salida.Item1, salida.Item2].Visitada = true;
+
+            }
 
             while (true)
             {
@@ -216,16 +237,19 @@ namespace TeVasAMorir
                 if (todasVisitadas)
                     break;
 
+                //da valores ramdom hasta encontrar uno valido, pero este bucle puede ser infinito
                 int xObs, yObs;
-                do
-                {
-                    xObs = random.Next(tamano);
-                    yObs = random.Next(tamano);
-                } while (Tablero[xObs, yObs].EsObstaculo || Tablero[xObs, yObs].Visitada);
+
+                List<(int, int)> celdasPosibles = CeldasPosibles(tamano);
+                Random random = new Random();
+                int numRandom = random.Next(celdasPosibles.Count);
+                xObs = celdasPosibles[numRandom].Item1;
+                yObs = celdasPosibles[numRandom].Item2;
 
                 Tablero[xObs, yObs].EsObstaculo = true;
 
-                if (!EsAccesibleDesdeEsquinas(objetivo))
+                //Verifica la accesibilidad de las metas desde las salidas
+                if (!EsAccesibleDesdeEsquinas(objetivo, esquinas))
                 {
                     Tablero[xObs, yObs].EsObstaculo = false;
                     Tablero[xObs, yObs].Visitada = true;
@@ -234,18 +258,28 @@ namespace TeVasAMorir
             }
         }
 
-        private bool EsAccesibleDesdeEsquinas(List<(int, int)> objetivos)
+        private List<(int, int)> CeldasPosibles(int tamano)
+        {
+            List<(int, int)> celdasPosibles = new List<(int, int)> { };
+            for (int x = 0; x < tamano; x++)
+            {
+                for (int y = 0; y < tamano; y++)
+                {
+                    if (!Tablero[x, y].EsObstaculo && !Tablero[x, y].Visitada)
+                        celdasPosibles.Add((x, y));
+
+                }
+            }
+            return celdasPosibles;
+        }
+
+        private bool EsAccesibleDesdeEsquinas(List<(int, int)> objetivos, List<(int, int)> esquinas)
         {
             foreach (var objetivo in objetivos)
             {
-                foreach (var esquina in new List<(int, int)>
-            {
-                (0, 0),
-                (0, tamano - 1),
-                (tamano - 1, 0),
-                (tamano - 1, tamano - 1)
-            })
+                foreach (var esquina in esquinas)
                 {
+                    //Verifica si hay un camino desde la esquina a la meta correspondientes
                     if (!AlgoritmoDeLee(esquina.Item1, esquina.Item2, objetivo.Item1, objetivo.Item2))
                     {
                         return false;
@@ -257,6 +291,7 @@ namespace TeVasAMorir
 
 
 
+        //Verifica si hay un camino desde la esquina a la meta correspondientes
         public bool AlgoritmoDeLee(int startX, int startY, int endX, int endY)
         {
             if (Tablero[startX, startY].EsObstaculo || Tablero[endX, endY].EsObstaculo)
@@ -264,12 +299,13 @@ namespace TeVasAMorir
                 return false;
             }
 
-            Queue<(int, int)> cola = new Queue<(int, int)>();
+            Queue<(int, int)> cola = new();
 
+            //resetea las casillas visitadas y las distancias
+            ResetVisitado();
             Tablero[startX, startY].Visitada = true;
             Tablero[startX, startY].Distancia = 0;
             cola.Enqueue((startX, startY));
-            ResetVisitado();
             while (cola.Count > 0)
             {
                 var (x, y) = cola.Dequeue();
@@ -293,6 +329,7 @@ namespace TeVasAMorir
             return false; // No se encontró una ruta
         }
 
+        //resetea las casillas visitadas y las distancias
         private void ResetVisitado()
         {
             for (int y = 0; y < tamano; y++)
@@ -305,6 +342,7 @@ namespace TeVasAMorir
             }
         }
 
+        //Verifica si la casilla esta dentro del laberinto
         private bool DentroDelLaberinto(int x, int y)
         {
             return x >= 0 && x < tamano && y >= 0 && y < tamano;
@@ -312,6 +350,7 @@ namespace TeVasAMorir
 
         public void ImprimirTablero()
         {
+            Console.Clear();
             for (int y = 0; y < tamano; y++)
             {
                 for (int x = 0; x < tamano; x++)

@@ -17,12 +17,10 @@ namespace TeVasAMorir
             cantJug = PonerCantJug();
             TrampasDisponibles = EstablecerTrampas();
             Dificultad = PonerDificultad();
-            //aqui ahora tengo que pasarle al laberinto las trampas disponibles para que las distribuya por el tablero
             laberinto = MakeLaberinto(Dificultad);
             fichasDisponibles = CrearFichas(laberinto);
             JugadoresActivos = CrearJugadores(cantJug, laberinto, fichasDisponibles);
             Console.CursorVisible = false;
-            Console.Clear();
             laberinto.ImprimirTablero();
             PonerFichasIniciales();
             ManejarTurnos();
@@ -32,9 +30,9 @@ namespace TeVasAMorir
         List<Trampa> EstablecerTrampas()
         {
             MalasCredenciales malasCredenciales = new MalasCredenciales();
-            HacerCola hacerCola = new HacerCola();
-            SinCorriente sinCorriente = new SinCorriente();
-            List<Trampa> trampasDisponbles = new List<Trampa> { malasCredenciales, hacerCola, sinCorriente };
+            HacerCola hacerCola = new();
+            SinCorriente sinCorriente = new();
+            List<Trampa> trampasDisponbles = [malasCredenciales, hacerCola, sinCorriente];
             return trampasDisponbles;
         }
         void ManejarTurnos()
@@ -67,7 +65,7 @@ namespace TeVasAMorir
                 if (jugador.FichaJugador.xPosicion >= 0 && jugador.FichaJugador.xPosicion < laberinto.tamano &&
                     jugador.FichaJugador.yPosicion >= 0 && jugador.FichaJugador.yPosicion < laberinto.tamano)
                 {
-                    jugador.FichaJugador.DibujarFicha(jugador.FichaJugador.xPosicion, jugador.FichaJugador.yPosicion);
+                    laberinto.ImprimirTablero();
                 }
                 else
                 {
@@ -90,18 +88,22 @@ namespace TeVasAMorir
                     case 0:
                         xPos = 0;
                         yPos = 0;
+                        laberinto.Tablero[xPos, yPos].TieneFicha = true;
                         break;
                     case 1:
                         xPos = laberinto.tamano - 1;
                         yPos = 0;
+                        laberinto.Tablero[xPos, yPos].TieneFicha = true;
                         break;
                     case 2:
                         xPos = 0;
                         yPos = laberinto.tamano - 1;
+                        laberinto.Tablero[xPos, yPos].TieneFicha = true;
                         break;
                     case 3:
                         xPos = laberinto.tamano - 1;
                         yPos = laberinto.tamano - 1;
+                        laberinto.Tablero[xPos, yPos].TieneFicha = true;
                         break;
                 }
 
